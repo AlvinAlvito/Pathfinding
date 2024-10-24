@@ -61,9 +61,6 @@ export default class PathfindingState {
             case "dijkstra":
                 this.algorithm = new Dijkstra();
                 break;
-            case "bidirectional":
-                this.algorithm = new BidirectionalSearch();
-                break;
             default:
                 this.algorithm = new AStar();
                 break;
