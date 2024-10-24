@@ -88,15 +88,6 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
         else if(e.code === "KeyR" && (animationEnded || !started)) clearPath();
     };
 
-    // Show cinematic mode helper
-    useEffect(() => {
-        if(!cinematic) return;
-        setHelper(true);
-        setTimeout(() => {
-            helperTime.current = 2500;
-        }, 200);
-    }, [cinematic]);
-
     useEffect(() => {
         if(localStorage.getItem("path_sawtutorial")) return;
         setShowTutorial(true);
@@ -107,7 +98,7 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
         <>
             <div className={`nav-top ${cinematic ? "cinematic" : ""}`}>
 
-                <IconButton disabled={!canStart} onClick={handlePlay} style={{ backgroundColor: "#46B780", width: 60, height: 60 }} size="large">
+                <IconButton disabled={!canStart} onClick={handlePlay} style={{ backgroundColor: "#404156", width: 60, height: 60 }} size="large">
                     {(!started || animationEnded && !playbackOn) 
                         ? <PlayArrow style={{ color: "#fff", width: 26, height: 26 }} fontSize="inherit" />
                         : <Pause style={{ color: "#fff", width: 26, height: 26 }} fontSize="inherit" />
@@ -121,7 +112,7 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
             <div className={`nav-right ${cinematic ? "cinematic" : ""}`}>
                 <Tooltip title="Open settings">
                     <IconButton onClick={() => {setSidebar(true);}} style={{ backgroundColor: "#2A2B37", width: 36, height: 36 }} size="large">
-                        <Settings style={{ color: "#fff", width: 24, height: 24 }} fontSize="inherit" />
+                        <Settings style={{ color: "#fff", width: 26, height: 26 }} fontSize="inherit" />
                     </IconButton>
                 </Tooltip>
             </div>
@@ -144,43 +135,6 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
                 </Button>
             </div>
 
-            <Backdrop
-                open={showTutorial}
-                onClick={e => {if(e.target.classList.contains("backdrop")) setShowTutorial(false);}}
-                className="backdrop"
-            >
-                <div className="tutorial-container">
-                    <Stepper activeStep={activeStep}>
-                        <Step>
-                            <StepLabel>Basic controls</StepLabel>
-                        </Step>
-                        <Step>
-                            <StepLabel>Playback controls</StepLabel>
-                        </Step>
-                        <Step>
-                            <StepLabel>Changing settings</StepLabel>
-                        </Step>
-                    </Stepper>
- 
-                    <div className="controls">
-                        <Button onClick={() => {setShowTutorial(false);}}
-                            className="close" variant="outlined" style={{ borderColor: "#9f9f9f", color: "#9f9f9f", paddingInline: 15 }}
-                        >
-                            Close
-                        </Button>
-                        <Button onClick={() => {handleTutorialChange(-1);}}
-                            variant="outlined" style={{ borderColor: "#9f9f9f", color: "#9f9f9f", paddingInline: 18 }}
-                        >
-                                Back
-                        </Button>
-                        <Button onClick={() => {handleTutorialChange(1);}}
-                            variant="contained" style={{ backgroundColor: "#46B780", color: "#fff", paddingInline: 30, fontWeight: "bold" }}
-                        >
-                            {activeStep >= 2 ? "Finish" : "Next"}
-                        </Button>
-                    </div>
-                </div>
-            </Backdrop>
 
             <Drawer
                 className={`side-drawer ${cinematic ? "cinematic" : ""}`}
@@ -210,7 +164,7 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
 
                     <div className="side slider-container">
                         <Typography id="area-slider" >
-                            Area radius: {settings.radius}km ({(settings.radius / 1.609).toFixed(1)}mi)
+                            Area radius: {settings.radius} Km
                         </Typography>
                         <Slider disabled={started && !animationEnded} min={2} max={20} step={1} value={settings.radius} onChangeCommited={() => { changeRadius(settings.radius); }} onChange={e => { setSettings({...settings, radius: Number(e.target.value)}); }} className="slider" aria-labelledby="area-slider" style={{ marginBottom: 1 }} 
                             marks={[
@@ -251,36 +205,12 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
                         </div>
 
                         <div>
-                            <Typography id="start-border-label" >
-                                Pillih Warna untuk border node awal
-                            </Typography>
-                            <div className="color-container">
-                                <MuiColorInput value={arrayToRgb(colors.startNodeBorder)} onChange={v => {setColors({...colors, startNodeBorder: rgbToArray(v)});}} aria-labelledby="start-border-label" style={{ backgroundColor: "#404156" }} />
-                                <IconButton onClick={() => {setColors({...colors, startNodeBorder: INITIAL_COLORS.startNodeBorder});}} style={{ backgroundColor: "transparent" }} size="small">
-                                    <Replay style={{ color: "#fff", width: 20, height: 20 }} fontSize="inherit" />
-                                </IconButton>
-                            </div>
-                        </div>
-
-                        <div>
                             <Typography id="end-fill-label" >
                                 Pilih Warna untuk node akhir
                             </Typography>
                             <div className="color-container">
                                 <MuiColorInput value={arrayToRgb(colors.endNodeFill)} onChange={v => {setColors({...colors, endNodeFill: rgbToArray(v)});}} aria-labelledby="end-fill-label" style={{ backgroundColor: "#404156" }} />
                                 <IconButton onClick={() => {setColors({...colors, endNodeFill: INITIAL_COLORS.endNodeFill});}} style={{ backgroundColor: "transparent" }} size="small">
-                                    <Replay style={{ color: "#fff", width: 20, height: 20 }} fontSize="inherit" />
-                                </IconButton>
-                            </div>
-                        </div>
-
-                        <div>
-                            <Typography id="end-border-label" >
-                                Pilih Warna untuk border node akhir
-                            </Typography>
-                            <div className="color-container">
-                                <MuiColorInput value={arrayToRgb(colors.endNodeBorder)} onChange={v => {setColors({...colors, endNodeBorder: rgbToArray(v)});}} aria-labelledby="end-border-label" style={{ backgroundColor: "#404156" }} />
-                                <IconButton onClick={() => {setColors({...colors, endNodeBorder: INITIAL_COLORS.endNodeBorder});}} style={{ backgroundColor: "transparent" }} size="small">
                                     <Replay style={{ color: "#fff", width: 20, height: 20 }} fontSize="inherit" />
                                 </IconButton>
                             </div>

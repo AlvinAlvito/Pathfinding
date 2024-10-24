@@ -1,9 +1,6 @@
 import { useRef } from "react";
 import PathfindingState from "../models/PathfindingState";
 
-/**
- * Prints a rough representation of the graph in the PathfindingState
- */
 function GraphDebug() {
     const canvasRef = useRef();
     const state = new PathfindingState();
