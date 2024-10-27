@@ -131,7 +131,7 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
 
             <div className="mobile-controls">
                 <Button onClick={() => {setPlaceEnd(!placeEnd);}} style={{ color: "#fff", backgroundColor: "#404156", paddingInline: 30, paddingBlock: 7 }} variant="contained">
-                    {placeEnd ? "placing end node" : "placing start node"}
+                    {placeEnd ? "Letakan Titik Awal" : "Letakan Titik Tujuan"}
                 </Button>
             </div>
 

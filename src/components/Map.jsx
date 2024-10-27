@@ -307,7 +307,6 @@ function Map() {
                         fadeTrail={false}
                         currentTime={time}
                         getColor={d => colors[d.color]}
-                        /** Create a nice glowy effect that absolutely kills the performance  */
                         // getColor={(d) => {
                         //     if(d.color !== "path") return colors[d.color];
                         //     const color = colors[d.color];

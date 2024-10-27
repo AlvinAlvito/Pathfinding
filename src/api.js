@@ -1,7 +1,7 @@
 const highWayExclude = ["footway", "street_lamp", "steps", "pedestrian", "track", "path"];
 /**
  * 
- * @param {Array} boundingBox array with 2 objects that have a latitude and longitude property 
+ * @param {Array} boundingBox 
  * @returns {Promise<Response>}
  */
 export function fetchOverpassData(boundingBox) {
@@ -19,3 +19,5 @@ export function fetchOverpassData(boundingBox) {
         body: query
     });
 }
+
+// https://overpass-api.de/api/interpreter?data=[out:json];(way[highway][highway!="footway"][highway!="street_lamp"][highway!="steps"][highway!="pedestrian"][highway!="track"][highway!="path"][footway!="*"](-7.7956,110.3695,-7.7925,110.3777);node(w););out skel;
