@@ -1,6 +1,6 @@
-import { Button, IconButton, Typography, Snackbar, Alert, CircularProgress, Fade, Tooltip, Drawer, MenuItem, Select, InputLabel, FormControl, Menu, Backdrop, Stepper, Step, StepLabel } from "@mui/material";
+import { Button, IconButton, Typography, Snackbar, Alert, CircularProgress, Fade, Tooltip, Drawer, MenuItem, Select, InputLabel, FormControl, Backdrop, Stepper, Step, StepLabel } from "@mui/material";
 import { MuiColorInput } from "mui-color-input";
-import { PlayArrow, Settings, Movie, Pause, Replay } from "@mui/icons-material";
+import { PlayArrow, Menu as HamburgerMenu, Movie, Pause, Replay } from "@mui/icons-material";
 import Slider from "./Slider";
 import { useState, useEffect, useRef, useImperativeHandle, forwardRef } from "react";
 import { INITIAL_COLORS, LOCATIONS } from "../config";
@@ -98,24 +98,31 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
         <>
             <div className={`nav-top ${cinematic ? "cinematic" : ""}`}>
 
-                <IconButton disabled={!canStart} onClick={handlePlay} style={{ backgroundColor: "#404156", width: 60, height: 60 }} size="large">
-                    {(!started || animationEnded && !playbackOn) 
+                <Button 
+                    disabled={!canStart} 
+                    onClick={handlePlay} 
+                    variant="contained" 
+                    style={{ backgroundColor: "#404156", width: 40, height: 40, borderRadius: 4 }} 
+                >
+                    {(!started || (animationEnded && !playbackOn)) 
                         ? <PlayArrow style={{ color: "#fff", width: 26, height: 26 }} fontSize="inherit" />
                         : <Pause style={{ color: "#fff", width: 26, height: 26 }} fontSize="inherit" />
                     }
-                </IconButton>
+                </Button>
+
                 <div className="side">
                     <Button disabled={!animationEnded && started} onClick={clearPath} style={{ color: "#fff", backgroundColor: "#404156", paddingInline: 30, paddingBlock: 7 }} variant="contained">Reset</Button>
                 </div>
             </div>
 
             <div className={`nav-right ${cinematic ? "cinematic" : ""}`}>
-                <Tooltip title="Open settings">
+                <Tooltip title="Buka Menu">
                     <IconButton onClick={() => {setSidebar(true);}} style={{ backgroundColor: "#2A2B37", width: 36, height: 36 }} size="large">
-                        <Settings style={{ color: "#fff", width: 26, height: 26 }} fontSize="inherit" />
+                        <HamburgerMenu style={{ color: "#fff", width: 40, height: 40 }} fontSize="inherit" />
                     </IconButton>
                 </Tooltip>
             </div>
+
 
             <div className="loader-container">
                 <Fade
@@ -144,23 +151,7 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
             >
                 <div className="sidebar-container">
 
-                    <FormControl variant="filled">
-                        <InputLabel style={{ fontSize: 14 }} id="algo-select">Pilih Algoritma</InputLabel>
-                        <Select
-                            labelId="algo-select"
-                            value={settings.algorithm}
-                            onChange={e => {changeAlgorithm(e.target.value);}}
-                            required
-                            style={{ backgroundColor: "#404156", color: "#fff", width: "100%", paddingLeft: 1 }}
-                            inputProps={{MenuProps: {MenuListProps: {sx: {backgroundColor: "#404156"}}}}}
-                            size="small"
-                            disabled={!animationEnded && started}
-                        >
-                            <MenuItem value={"astar"}>Algoritma A*</MenuItem>
-                            <MenuItem value={"dijkstra"}>Algopritma Dijkstra&apos;</MenuItem>
-                            <MenuItem value={"greedy"}>Allgoritma Greedy </MenuItem>
-                        </Select>
-                    </FormControl>
+                   
 
                     <div className="side slider-container">
                         <Typography id="area-slider" >
@@ -186,6 +177,24 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
                         </Typography>
                         <Slider min={1} max={30} value={settings.speed} onChange={e => { setSettings({...settings, speed: Number(e.target.value)}); }} className="slider" aria-labelledby="speed-slider" style={{ marginBottom: 1 }} />
                     </div>
+
+                    <FormControl variant="filled">
+                        <InputLabel style={{ fontSize: 18 }} id="algo-select">Pilih Algoritma</InputLabel>
+                        <Select
+                            labelId="algo-select"
+                            value={settings.algorithm}
+                            onChange={e => {changeAlgorithm(e.target.value);}}
+                            required
+                            style={{ backgroundColor: "#404156 ", color: "#fff", width: "100%", paddingLeft: 1, marginTop: 4 }}
+                            inputProps={{MenuProps: {MenuListProps: {sx: {backgroundColor: "#404156"}}}}}
+                            size="small"
+                            disabled={!animationEnded && started}
+                        >
+                            <MenuItem value={"astar"}>Algoritma A*</MenuItem>
+                            <MenuItem value={"dijkstra"}>Algopritma Dijkstra&apos;</MenuItem>
+                            <MenuItem value={"greedy"}>Allgoritma Greedy </MenuItem>
+                        </Select>
+                    </FormControl>
 
                     <div className="styles-container">
                         <Typography style={{ color: "#A8AFB3", textTransform: "uppercase", fontSize: 14 }} >
@@ -243,6 +252,9 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
                 </div>
             </Drawer>
 
+            <a href="https://Avinto.my.id" style={ { position: "absolute", right: 0, top: 0, padding: 10,  textDecoration: "none", fontSize: 22 }} target="_blank" className="copyright">
+                @Av_into
+            </a>
             
         </>
     );
