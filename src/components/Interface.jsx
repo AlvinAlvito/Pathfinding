@@ -1,9 +1,8 @@
-import { Button, IconButton, Typography, Snackbar, Alert, CircularProgress, Fade, Tooltip, Drawer, MenuItem, Select, InputLabel, FormControl, Backdrop, Stepper, Step, StepLabel } from "@mui/material";
+import { Button, IconButton, Typography, Snackbar, Alert, CircularProgress, Fade, Tooltip, Drawer, MenuItem, Select, InputLabel, FormControl } from "@mui/material";
 import { MuiColorInput } from "mui-color-input";
-import { PlayArrow, Menu as HamburgerMenu, Movie, Pause, Replay } from "@mui/icons-material";
+import { PlayArrow, Menu as HamburgerMenu, Pause, Replay } from "@mui/icons-material";
 import Slider from "./Slider";
 import { useState, useEffect, useRef, useImperativeHandle, forwardRef } from "react";
-import { INITIAL_COLORS, LOCATIONS } from "../config";
 import { arrayToRgb, rgbToArray } from "../helpers";
 
 const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, time, maxTime, settings, colors, loading, timeChanged, cinematic, placeEnd, changeRadius, changeAlgorithm, setPlaceEnd, setCinematic, setSettings, setColors, startPathfinding, toggleAnimation, clearPath, changeLocation }, ref) => {
@@ -13,12 +12,7 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
         message: "",
         type: "error",
     });
-    const [showTutorial, setShowTutorial] = useState(false);
     const [activeStep, setActiveStep] = useState(0);
-    const [helper, setHelper] = useState(false);
-    const [menuAnchor, setMenuAnchor] = useState(null);
-    const menuOpen = Boolean(menuAnchor);
-    const helperTime = useRef(4800);
     const rightDown = useRef(false);
     const leftDown = useRef(false);
 
@@ -29,23 +23,6 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
         },
     }));
       
-    function closeSnack() {
-        setSnack({...snack, open: false});
-    }
-
-    function closeHelper() {
-        setHelper(false);
-    }
-
-    function handleTutorialChange(direction) {
-        if(activeStep >= 2 && direction > 0) {
-            setShowTutorial(false);
-            return;
-        }
-        
-        setActiveStep(Math.max(activeStep + direction, 0));
-    }
-
     // Start pathfinding or toggle playback
     function handlePlay() {
         if(!canStart) return;
@@ -54,10 +31,6 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
             return;
         }
         toggleAnimation();
-    }
-    
-    function closeMenu() {
-        setMenuAnchor(null);
     }
 
     window.onkeydown = e => {
@@ -93,26 +66,53 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
         setShowTutorial(true);
         localStorage.setItem("path_sawtutorial", true);
     }, []);
-
+    
     return (
         <>
             <div className={`nav-top ${cinematic ? "cinematic" : ""}`}>
+            <Button 
+                disabled={!canStart} 
+                onClick={handlePlay} 
+                variant="contained" 
+                style={{ 
+                    backgroundColor: "#404156", 
+                    borderRadius: 4, 
+                    padding: '8px 16px',  // Untuk menambahkan ruang untuk ikon dan teks 
+                    display: 'flex', 
+                    alignItems: 'center' 
+                }}
+            >
+                {(!started || (animationEnded && !playbackOn)) ? (
+                    <>
+                        <PlayArrow style={{ color: "#fff", width: 26, height: 26, marginRight: 8 }} />
+                        <span style={{ color: "#fff" }}>Mulai</span>
+                    </>
+                ) : (
+                    <>
+                        <Pause style={{ color: "#fff", width: 26, height: 26, marginRight: 8 }} />
+                        <span style={{ color: "#fff" }}>Jeda</span>
+                    </>
+                )}
+            </Button>
 
+
+            <div className="side">
                 <Button 
-                    disabled={!canStart} 
-                    onClick={handlePlay} 
-                    variant="contained" 
-                    style={{ backgroundColor: "#404156", width: 40, height: 40, borderRadius: 4 }} 
-                >
-                    {(!started || (animationEnded && !playbackOn)) 
-                        ? <PlayArrow style={{ color: "#fff", width: 26, height: 26 }} fontSize="inherit" />
-                        : <Pause style={{ color: "#fff", width: 26, height: 26 }} fontSize="inherit" />
-                    }
-                </Button>
+                    disabled={!animationEnded && started} 
+                    onClick={clearPath} 
+                    style={{ 
+                        color: "#fff", 
+                        backgroundColor: "#404156", 
+                        display: 'flex', 
+                        alignItems: 'center' 
+                    }} 
+                    variant="contained"
+                >                    
+                    <Replay style={{ marginLeft: 2, color: "#fff", width: 20, height: 20, marginRight: 8 }} />
+                     Reset
+                </Button>                 
+            </div>
 
-                <div className="side">
-                    <Button disabled={!animationEnded && started} onClick={clearPath} style={{ color: "#fff", backgroundColor: "#404156", paddingInline: 30, paddingBlock: 7 }} variant="contained">Reset</Button>
-                </div>
             </div>
 
             <div className={`nav-right ${cinematic ? "cinematic" : ""}`}>
@@ -207,9 +207,7 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
                             </Typography>
                             <div className="color-container">
                                 <MuiColorInput value={arrayToRgb(colors.startNodeFill)} onChange={v => {setColors({...colors, startNodeFill: rgbToArray(v)});}} aria-labelledby="start-fill-label" style={{ backgroundColor: "#404156" }} />
-                                <IconButton onClick={() => {setColors({...colors, startNodeFill: INITIAL_COLORS.startNodeFill});}} style={{ backgroundColor: "transparent" }} size="small">
-                                    <Replay style={{ color: "#fff", width: 20, height: 20 }} fontSize="inherit" />
-                                </IconButton>
+                      
                             </div>
                         </div>
 
@@ -219,9 +217,7 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
                             </Typography>
                             <div className="color-container">
                                 <MuiColorInput value={arrayToRgb(colors.endNodeFill)} onChange={v => {setColors({...colors, endNodeFill: rgbToArray(v)});}} aria-labelledby="end-fill-label" style={{ backgroundColor: "#404156" }} />
-                                <IconButton onClick={() => {setColors({...colors, endNodeFill: INITIAL_COLORS.endNodeFill});}} style={{ backgroundColor: "transparent" }} size="small">
-                                    <Replay style={{ color: "#fff", width: 20, height: 20 }} fontSize="inherit" />
-                                </IconButton>
+              
                             </div>
                         </div>
 
@@ -231,9 +227,7 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
                             </Typography>
                             <div className="color-container">
                                 <MuiColorInput value={arrayToRgb(colors.path)} onChange={v => {setColors({...colors, path: rgbToArray(v)});}} aria-labelledby="path-label" style={{ backgroundColor: "#404156" }} />
-                                <IconButton onClick={() => {setColors({...colors, path: INITIAL_COLORS.path});}} style={{ backgroundColor: "transparent" }} size="small">
-                                    <Replay style={{ color: "#fff", width: 20, height: 20 }} fontSize="inherit" />
-                                </IconButton>
+                
                             </div>
                         </div>
 
@@ -243,9 +237,7 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
                             </Typography>
                             <div className="color-container">
                                 <MuiColorInput value={arrayToRgb(colors.route)} onChange={v => {setColors({...colors, route: rgbToArray(v)});}} aria-labelledby="route-label" style={{ backgroundColor: "#404156" }} />
-                                <IconButton onClick={() => {setColors({...colors, route: INITIAL_COLORS.route});}} style={{ backgroundColor: "transparent" }} size="small">
-                                    <Replay style={{ color: "#fff", width: 20, height: 20 }} fontSize="inherit" />
-                                </IconButton>
+                
                             </div>
                         </div>
                     </div>
@@ -257,6 +249,7 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
             </a>
             
         </>
+        
     );
 });
 
