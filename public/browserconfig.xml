@@ -1,9 +1,57 @@
-<?xml version="1.0" encoding="utf-8"?>
-<browserconfig>
-    <msapplication>
-        <tile>
-            <square150x150logo src="/mstile-150x150.png"/>
-            <TileColor>#da532c</TileColor>
-        </tile>
-    </msapplication>
-</browserconfig>
+def infiks_ke_postfiks(ekspresi):
+    """
+    Mengonversi ekspresi infiks menjadi postfiks.
+    Args:
+        ekspresi: Ekspresi infiks yang akan dikonversi.
+    Returns:
+        Ekspresi postfiks atau pesan kesalahan jika ekspresi tidak valid.
+    """
+    output = []
+    operator = []
+    precedence = {'+': 1, '-': 1, '*': 2, '/': 2}
+    last_char = ""  
+
+    for i, karakter in enumerate(ekspresi):
+        if karakter.isdigit():
+            output.append(karakter)
+            last_char = karakter
+        elif karakter in "+-*/":
+
+            if last_char in "+-*/" or last_char == "(":
+                return f"Error: Operator tidak valid di posisi {i}"
+            while (operator and operator[-1] != '(' and 
+                   precedence.get(karakter, 0) <= precedence.get(operator[-1], 0)):
+                output.append(operator.pop())
+            operator.append(karakter)
+            last_char = karakter
+        elif karakter == '(':
+            operator.append(karakter)
+            last_char = karakter
+        elif karakter == ')':
+
+            while operator and operator[-1] != '(':
+                output.append(operator.pop())
+            if not operator:
+                return f"Error: Tanda kurung tidak valid di posisi {i}"
+            operator.pop() 
+            last_char = karakter
+        else:
+            return f"Error: Karakter tidak valid '{karakter}' di posisi {i}"
+
+    while operator:
+        top = operator.pop()
+        if top == '(':
+            return "Error: Tanda kurung tidak seimbang"
+        output.append(top)
+
+    return ''.join(output)
+
+
+def main():
+    ekspresi = input("Masukkan ekspresi dalam notasi infiks: ")
+    hasil = infiks_ke_postfiks(ekspresi)
+    print("Ekspresi Postfiks:", hasil)
+
+
+if __name__ == "__main__":
+    main()
