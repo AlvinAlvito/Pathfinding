@@ -101,6 +101,46 @@ canvas {
     }
 }
 
+.nav-bottom {
+    position: fixed;
+    left: -20px;
+    top: 16px;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 32px;
+    pointer-events: none;
+    transition: transform 500ms ease-out, opacity 300ms ease-in;
+    color: #ffffff96;
+
+    .perform {
+        background-color: #2b2d44;
+        color: #ffffff85;
+        box-shadow: 7px 0px 20px 0px rgba(0, 0, 0, 0.25);
+        border-radius: 10px;
+        padding: 10px 20px ;
+        transition: transform 500ms ease-out, opacity 300ms ease-in;
+    }
+
+
+
+    @media (max-width: 991px) {
+        flex-wrap: wrap-reverse;
+        top: 5px;
+        font-size: 14px;
+        row-gap: 10px;
+        column-gap: 20px;
+
+        .side {
+            width: unset;
+        }
+
+    }
+
+
+}
+
 .nav-right {
     position: fixed;
     left: 24px;

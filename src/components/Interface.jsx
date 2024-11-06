@@ -66,53 +66,73 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
         setShowTutorial(true);
         localStorage.setItem("path_sawtutorial", true);
     }, []);
+
+    
     
     return (
         <>
             <div className={`nav-top ${cinematic ? "cinematic" : ""}`}>
-            <Button 
-                disabled={!canStart} 
-                onClick={handlePlay} 
-                variant="contained" 
-                style={{ 
-                    backgroundColor: "#404156", 
-                    borderRadius: 4, 
-                    padding: '8px 16px',  // Untuk menambahkan ruang untuk ikon dan teks 
-                    display: 'flex', 
-                    alignItems: 'center' 
-                }}
-            >
-                {(!started || (animationEnded && !playbackOn)) ? (
-                    <>
-                        <PlayArrow style={{ color: "#fff", width: 26, height: 26, marginRight: 8 }} />
-                        <span style={{ color: "#fff" }}>Mulai</span>
-                    </>
-                ) : (
-                    <>
-                        <Pause style={{ color: "#fff", width: 26, height: 26, marginRight: 8 }} />
-                        <span style={{ color: "#fff" }}>Jeda</span>
-                    </>
-                )}
-            </Button>
-
-
-            <div className="side">
                 <Button 
-                    disabled={!animationEnded && started} 
-                    onClick={clearPath} 
+                    disabled={!canStart} 
+                    onClick={handlePlay} 
+                    variant="contained" 
                     style={{ 
-                        color: "#fff", 
                         backgroundColor: "#404156", 
+                        borderRadius: 4, 
+                        padding: '8px 16px', 
                         display: 'flex', 
                         alignItems: 'center' 
-                    }} 
-                    variant="contained"
-                >                    
-                    <Replay style={{ marginLeft: 2, color: "#fff", width: 20, height: 20, marginRight: 8 }} />
-                     Reset
-                </Button>                 
+                    }}
+                >
+                    {(!started || (animationEnded && !playbackOn)) ? (
+                        <>
+                            <PlayArrow style={{ color: "#fff", width: 26, height: 26, marginRight: 8 }} />
+                            <span style={{ color: "#fff" }}>Mulai</span>
+                        </>
+                    ) : (
+                        <>
+                            <Pause style={{ color: "#fff", width: 26, height: 26, marginRight: 8 }} />
+                            <span style={{ color: "#fff" }}>Jeda</span>
+                        </>
+                    )}
+                </Button>
+
+
+                <div className="side">
+                    <Button 
+                        disabled={!animationEnded && started} 
+                        onClick={clearPath} 
+                        style={{ 
+                            color: "#fff", 
+                            backgroundColor: "#404156", 
+                            display: 'flex', 
+                            alignItems: 'center' 
+                        }} 
+                        variant="contained"
+                    >                    
+                        <Replay style={{ marginLeft: 2, color: "#fff", width: 20, height: 20, marginRight: 8 }} />
+                        Reset
+                    </Button>                 
+                </div>
+
             </div>
 
+            <div className="nav-bottom">
+                <div className="perform">
+                    <Typography variant="h6" style={{marginBottom: 10, color: "#fff", fontWeight: 600, fontSize: 17}}>
+                        Performa Algortima 
+                    </Typography>
+                    <div className="shortestdistance">
+                        <Typography variant="h6" style={{ color: "#fff", fontWeight: 600, fontSize: 12 }}>
+                        <Replay style={{ color: "#fff", width: 18, height: 18, marginRight: 2 , paddingTop: 3}} /> Jarak Terpendek: 0 km
+                        </Typography>
+                    </div>
+                    <div className="time">
+                        <Typography variant="h6" style={{ color: "#fff", fontWeight: 600, fontSize: 12 }}>
+                          <Replay style={{ color: "#fff", width: 18, height: 18, marginRight: 2, paddingTop: 3 }} />  Waktu Pencarian: 0 Detik
+                        </Typography>
+                    </div>
+                </div>
             </div>
 
             <div className={`nav-right ${cinematic ? "cinematic" : ""}`}>
