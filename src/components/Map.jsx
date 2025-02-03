@@ -293,8 +293,8 @@ function Map() {
                         pickable={true}
                         stroked={true}
                         getPolygon={d => d.contour}
-                        getFillColor={[80, 210, 0, 10]}
-                        getLineColor={[9, 142, 46, 175]}
+                        getFillColor={[0, 122, 255, 10]} 
+                        getLineColor={[0, 76, 204, 175]}                    
                         getLineWidth={3}
                         opacity={selectionRadiusOpacity}
                     />
@@ -324,7 +324,7 @@ function Map() {
                             ...(endNode ? [{ coordinates: [endNode.lon, endNode.lat], color: colors.endNodeFill, lineColor: colors.endNodeBorder }] : []),
                         ]}
                         pickable={true}
-                        opacity={1}
+                        opacity={2}
                         stroked={true}
                         filled={true}
                         radiusScale={1}

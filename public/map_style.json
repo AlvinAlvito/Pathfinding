@@ -15,7 +15,7 @@
       "id": "background",
       "type": "background",
       "layout": { "visibility": "visible" },
-      "paint": { "background-color": "#1F242D", "background-opacity": 1 }
+      "paint": { "background-color": "#0b0d25", "background-opacity": 1 }
     },
     {
       "id": "landcover",
@@ -31,11 +31,11 @@
       "paint": {
         "fill-color": {
           "stops": [
-            [8, "#1F242D"],
-            [9, "#1F242D"],
-            [11, "#1F242D"],
-            [13, "#1F242D"],
-            [15, "#1F242D"]
+            [8, "#0b0d25"],
+            [9, "#0b0d25"],
+            [11, "#0b0d25"],
+            [13, "#0b0d25"],
+            [15, "#0b0d25"]
           ]
         },
         "fill-opacity": 1
@@ -52,11 +52,11 @@
       "paint": {
         "fill-color": {
           "stops": [
-            [8, "#1F242D"],
-            [9, "#1F242D"],
-            [11, "#1F242D"],
-            [13, "#1F242D"],
-            [15, "#1F242D"]
+            [8, "#0b0d25"],
+            [9, "#0b0d25"],
+            [11, "#0b0d25"],
+            [13, "#0b0d25"],
+            [15, "#0b0d25"]
           ]
         },
         "fill-opacity": 1,
@@ -74,11 +74,11 @@
       "paint": {
         "fill-color": {
           "stops": [
-            [8, "#1F242D"],
-            [9, "#1F242D"],
-            [11, "#1F242D"],
-            [13, "#1F242D"],
-            [15, "#1F242D"]
+            [8, "#0b0d25"],
+            [9, "#0b0d25"],
+            [11, "#0b0d25"],
+            [13, "#0b0d25"],
+            [15, "#0b0d25"]
           ]
         },
         "fill-antialias": true,
@@ -126,11 +126,11 @@
       "paint": {
         "fill-color": {
           "stops": [
-            [8, "#1F242D"],
-            [9, "#1F242D"],
-            [11, "#1F242D"],
-            [13, "#1F242D"],
-            [15, "#1F242D"]
+            [8, "#0b0d25"],
+            [9, "#0b0d25"],
+            [11, "#0b0d25"],
+            [13, "#0b0d25"],
+            [15, "#0b0d25"]
           ]
         }
       }

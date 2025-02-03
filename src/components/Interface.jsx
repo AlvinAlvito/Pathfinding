@@ -1,6 +1,6 @@
 import { Button, IconButton, Typography, Snackbar, Alert, CircularProgress, Fade, Tooltip, Drawer, MenuItem, Select, InputLabel, FormControl } from "@mui/material";
 import { MuiColorInput } from "mui-color-input";
-import { PlayArrow, Menu as HamburgerMenu, Pause, Replay } from "@mui/icons-material";
+import { PlayArrow, Menu as HamburgerMenu, Pause, Replay, Route, AccessTime, Hub, Memory     } from "@mui/icons-material";
 import Slider from "./Slider";
 import { useState, useEffect, useRef, useImperativeHandle, forwardRef } from "react";
 import { arrayToRgb, rgbToArray } from "../helpers";
@@ -60,14 +60,6 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
         }
         else if(e.code === "KeyR" && (animationEnded || !started)) clearPath();
     };
-
-    useEffect(() => {
-        if(localStorage.getItem("path_sawtutorial")) return;
-        setShowTutorial(true);
-        localStorage.setItem("path_sawtutorial", true);
-    }, []);
-
-    
     
     return (
         <>
@@ -119,19 +111,32 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
 
             <div className="nav-bottom">
                 <div className="perform">
-                    <Typography variant="h6" style={{marginBottom: 10, color: "#fff", fontWeight: 600, fontSize: 17}}>
-                        Performa Algortima 
-                    </Typography>
+                    
                     <div className="shortestdistance">
-                        <Typography variant="h6" style={{ color: "#fff", fontWeight: 600, fontSize: 12 }}>
-                        <Replay style={{ color: "#fff", width: 18, height: 18, marginRight: 2 , paddingTop: 3}} /> Jarak Terpendek: 0 km
+                        <Typography variant="h6" style={{ color: "#fff", fontWeight: 600, fontSize: 15 }}>
+                            <Route style={{ color: "#fff", width: 18, height: 18, marginRight: 1, paddingTop: 3 }} />
+                            Rute Terpendek: 0 km
                         </Typography>
                     </div>
                     <div className="time">
-                        <Typography variant="h6" style={{ color: "#fff", fontWeight: 600, fontSize: 12 }}>
-                          <Replay style={{ color: "#fff", width: 18, height: 18, marginRight: 2, paddingTop: 3 }} />  Waktu Pencarian: 0 Detik
+                        <Typography variant="h6" style={{ color: "#fff", fontWeight: 600, fontSize: 15 }}>
+                            <AccessTime style={{ color: "#fff", width: 18, height: 18, marginLeft: 15, paddingTop: 3 }} />
+                            Waktu Pencarian: 0 Detik
                         </Typography>
                     </div>
+                    <div className="time">
+                        <Typography variant="h6" style={{ color: "#fff", fontWeight: 600, fontSize: 15 }}>
+                            <Hub style={{ color: "#fff", width: 18, height: 18, marginLeft: 15, paddingTop: 3 }} />
+                            Total Node Dikunjungi: 0
+                        </Typography>
+                    </div>
+                    <div className="time">
+                        <Typography variant="h6" style={{ color: "#fff", fontWeight: 600, fontSize: 15 }}>
+                            <Memory style={{ color: "#fff", width: 18, height: 18, marginLeft: 15, paddingTop: 3 }} />
+                            Memori Digunakan: 0 b
+                        </Typography>
+                    </div>
+
                 </div>
             </div>
 
@@ -260,13 +265,47 @@ const Interface = forwardRef(({ canStart, started, animationEnded, playbackOn, t
                 
                             </div>
                         </div>
+                        <div>
+                        <a 
+                            href="https://info.flagcounter.com/q428" 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="flag-counter"
+                            style={{ display: "inline-block" }}
+                        >
+                            <img 
+                                src="https://s01.flagcounter.com/count2/q428/bg_FFFFFF/txt_000000/border_CCCCCC/columns_2/maxflags_10/viewers_Pengunjung/labels_0/pageviews_1/flags_0/percent_0/" 
+                                alt="Flag Counter Statistik Pengunjung" 
+                                style={{ border: "none" }} 
+                            />
+                        </a>
+
+                        </div>
                     </div>
                 </div>
             </Drawer>
 
-            <a href="https://Avinto.my.id" style={ { position: "absolute", right: 0, top: 0, padding: 10,  textDecoration: "none", fontSize: 22 }} target="_blank" className="copyright">
-                @Av_into
+            <a 
+                href="https://Avinto.my.id" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="copyright" 
+                style={{
+                    position: "absolute", 
+                    right: "0px", 
+                    bottom: "0px", 
+                    padding: "10px", 
+                    textDecoration: "none", 
+                    fontSize: "14px" // Ukuran font diperbesar agar terlihat
+                }}
+            >
+                <img 
+                    src="https://avinto.my.id/images/logo.png" 
+                    alt="Avinto Logo" 
+                    style={{ width: "140px" }} 
+                />
             </a>
+
             
         </>
         
