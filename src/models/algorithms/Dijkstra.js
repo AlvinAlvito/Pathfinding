@@ -9,6 +9,7 @@ class Dijkstra extends PathfindingAlgorithm {
     start(startNode, endNode) {
         super.start(startNode, endNode);
         this.openList = [startNode];
+        startNode.distanceFromStart = 0;
     }
 
     nextStep() {
@@ -18,12 +19,21 @@ class Dijkstra extends PathfindingAlgorithm {
         }
 
         const updatedNodes = [];
-        const currentNode = this.openList.shift();
+
+        // ✅ Pilih node dengan jarak terpendek dari openList
+        let minIndex = 0;
+        for (let i = 1; i < this.openList.length; i++) {
+            if (this.openList[i].distanceFromStart < this.openList[minIndex].distanceFromStart) {
+                minIndex = i;
+            }
+        }
+        const currentNode = this.openList.splice(minIndex, 1)[0];
+
         currentNode.visited = true;
         const refEdge = currentNode.edges.find(e => e.getOtherNode(currentNode) === currentNode.referer);
         if(refEdge) refEdge.visited = true;
 
-        // Found end node
+        // Cek apakah sudah sampai tujuan
         if (currentNode.id === this.endNode.id) {
             this.openList = [];
             this.finished = true;
@@ -34,8 +44,12 @@ class Dijkstra extends PathfindingAlgorithm {
             const neighbor = n.node;
             const edge = n.edge;
 
-            // Fill edges that are not marked on the map
-            if(neighbor.visited && !edge.visited) {
+            // Inisialisasi jarak jika belum ada
+            if (neighbor.distanceFromStart === undefined) {
+                neighbor.distanceFromStart = Infinity;
+            }
+
+            if (neighbor.visited && !edge.visited) {
                 edge.visited = true;
                 neighbor.referer = currentNode;
                 updatedNodes.push(neighbor);
@@ -49,8 +63,7 @@ class Dijkstra extends PathfindingAlgorithm {
                 if (neighborCurrentCost >= neighbor.distanceFromStart) {
                     continue;
                 }
-            } 
-            else {
+            } else {
                 this.openList.push(neighbor);
             }
 
