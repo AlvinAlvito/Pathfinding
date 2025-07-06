@@ -25,6 +25,7 @@ class AStar extends PathfindingAlgorithm {
         const currentNode = this.openList.reduce((acc, current) => current.totalDistance < acc.totalDistance ? current : acc, this.openList[0]);
         this.openList.splice(this.openList.indexOf(currentNode), 1);
         currentNode.visited = true;
+        currentNode.processed = true;
         const refEdge = currentNode.edges.find(e => e.getOtherNode(currentNode) === currentNode.referer);
         if(refEdge) refEdge.visited = true;
 

@@ -7,12 +7,11 @@ import Edge from "./Edge";
  */
 
 export default class Node {
-
     /**
-     * 
-     * @param {Number} id 
-     * @param {Number} latitude 
-     * @param {Number} longitude 
+     *
+     * @param {Number} id
+     * @param {Number} latitude
+     * @param {Number} longitude
      */
     constructor(id, latitude, longitude) {
         this.edges = [];
@@ -31,15 +30,15 @@ export default class Node {
     }
 
     /**
-     * @returns {NodeNeighbor[]} list of neighbors 
+     * @returns {NodeNeighbor[]} list of neighbors
      */
     get neighbors() {
-        return this.edges.map(edge => ({ edge, node: edge.getOtherNode(this)}));
+        return this.edges.map((edge) => ({ edge, node: edge.getOtherNode(this) }));
     }
 
     /**
-     * 
-     * @param {Node} node 
+     *
+     * @param {Node} node
      */
     connectTo(node) {
         const edge = new Edge(this, node);
@@ -52,13 +51,16 @@ export default class Node {
      */
     reset() {
         this.visited = false;
-        this.distanceFromStart = 0;
+        this.processed = false;
+        this.distanceFromStart = Infinity;
         this.distanceToEnd = 0;
         this.parent = null;
         this.referer = null;
 
-        for(const neighbor of this.neighbors) {
-            neighbor.edge.visited = false;
+        for (const neighbor of this.neighbors) {
+            if (neighbor.edge) {
+                neighbor.edge.visited = false;
+            }
         }
     }
 }

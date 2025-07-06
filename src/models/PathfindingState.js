@@ -49,25 +49,28 @@ export default class PathfindingState {
     /**
      * Resets state and initializes new pathfinding animation
      */
-    start(algorithm) {
-        this.reset();
-        switch(algorithm) {
-            case "astar":
-                this.algorithm = new AStar();
-                break;
-            case "greedy":
-                this.algorithm = new Greedy();
-                break;
-            case "dijkstra":
-                this.algorithm = new Dijkstra();
-                break;
-            default:
-                this.algorithm = new AStar();
-                break;
-        }
+start(algorithm) {
+    console.log("🔄 Ganti algoritma ke:", algorithm); // debug
 
-        this.algorithm.start(this.startNode, this.endNode);
+    this.reset();
+    switch(algorithm) {
+        case "astar":
+            this.algorithm = new AStar();
+            break;
+        case "greedy":
+            this.algorithm = new Greedy();
+            break;
+        case "dijkstra":
+            this.algorithm = new Dijkstra();
+            break;
+        default:
+            this.algorithm = new AStar();
+            break;
     }
+
+    this.algorithm.start(this.startNode, this.endNode);
+}
+
 
     /**
      * Progresses the pathfinding algorithm by one step/iteration
