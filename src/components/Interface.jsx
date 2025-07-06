@@ -141,37 +141,31 @@ const Interface = forwardRef(({
             <div className="nav-bottom">
                 <div className="perform">
                     <div className="shortestdistance">
-                        <Typography variant="h6" style={{ color: "#fff", fontWeight: 600, fontSize: 11 }}>
+                        <Typography variant="h6" style={{ color: "#fff", fontWeight: 600, fontSize: 13 }}>
                             <Route style={{ color: "#fff", width: 18, height: 18, marginRight: 1, paddingTop: 3 }} />
                             Rute Terpendek: {shortestDistance} meter
                         </Typography>
                     </div>
                     <div className="time">
-                        <Typography variant="h6" style={{ color: "#fff", fontWeight: 600, fontSize: 11 }}>
+                        <Typography variant="h6" style={{ color: "#fff", fontWeight: 600, fontSize: 13 }}>
                             <Hub style={{ color: "#fff", width: 18, height: 18, marginLeft: 15, paddingTop: 3 }} />
                             Jumlah Node Rute Terpendek: {shortestPathNodeCount}
                         </Typography>
                     </div>
                     <div className="time">
-                        <Typography variant="h6" style={{ color: "#fff", fontWeight: 600, fontSize: 11 }}>
+                        <Typography variant="h6" style={{ color: "#fff", fontWeight: 600, fontSize: 13 }}>
                             <AccessTime style={{ color: "#fff", width: 18, height: 18, marginLeft: 15, paddingTop: 3 }} />
                             Waktu Pencarian: {searchTime} Detik
                         </Typography>
                     </div>
                     <div className="time">
-                        <Typography variant="h6" style={{ color: "#fff", fontWeight: 600, fontSize: 11 }}>
+                        <Typography variant="h6" style={{ color: "#fff", fontWeight: 600, fontSize: 13 }}>
                             <Hub style={{ color: "#fff", width: 18, height: 18, marginLeft: 15, paddingTop: 3 }} />
                             Total Node Dikunjungi: {visitedNodes}
                         </Typography>
                     </div>
                     <div className="time">
-                        <Typography variant="h6" style={{ color: "#fff", fontWeight: 600, fontSize: 11 }}>
-                            <Route style={{ color: "#fff", width: 18, height: 18, marginLeft: 15, paddingTop: 3 }} />
-                            Panjang Node yang Dikunjungi: {totalPathLengthKm} km
-                        </Typography>
-                    </div>
-                    <div className="time">
-                        <Typography variant="h6" style={{ color: "#fff", fontWeight: 600, fontSize: 11 }}>
+                        <Typography variant="h6" style={{ color: "#fff", fontWeight: 600, fontSize: 13 }}>
                             <Memory style={{ color: "#fff", width: 18, height: 18, marginLeft: 15, paddingTop: 3 }} />
                             Memori Digunakan: {memoryUsed}
                         </Typography>
