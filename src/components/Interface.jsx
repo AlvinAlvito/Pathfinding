@@ -47,15 +47,21 @@ const Interface = forwardRef(({
     const [searchTime, setSearchTime] = useState(0);
     const [visitedNodes, setVisitedNodes] = useState(0);
     const [memoryUsed, setMemoryUsed] = useState(0);
+    const [shortestPathNodeCount, setShortestPathNodeCount] = useState(0);
+    const [totalPathLengthKm, setTotalPathLengthKm] = useState("0.00");
 
     useEffect(() => {
         if (metrics) {
             setShortestDistance(metrics.distance || 0);
-            setSearchTime(metrics.time || 0);
+            setSearchTime(metrics.searchTime || 0);
             setVisitedNodes(metrics.visited || 0);
             setMemoryUsed(metrics.memory || 0);
+            setShortestPathNodeCount(metrics.shortestPathNodeCount || 0);
+            setTotalPathLengthKm(metrics.totalPathLengthKm || "0.00");
         }
     }, [metrics]);
+
+
 
     useImperativeHandle(ref, () => ({
         showSnack(message, type = "error") {
@@ -95,7 +101,7 @@ const Interface = forwardRef(({
             toggleAnimation(false, 1);
         } else if (e.code === "KeyR" && (animationEnded || !started)) clearPath();
     };
-    
+
     return (
         <>
             {/* Tombol Atas */}
@@ -135,31 +141,45 @@ const Interface = forwardRef(({
             <div className="nav-bottom">
                 <div className="perform">
                     <div className="shortestdistance">
-                        <Typography variant="h6" style={{ color: "#fff", fontWeight: 600, fontSize: 15 }}>
+                        <Typography variant="h6" style={{ color: "#fff", fontWeight: 600, fontSize: 11 }}>
                             <Route style={{ color: "#fff", width: 18, height: 18, marginRight: 1, paddingTop: 3 }} />
-                            Rute Terpendek: {metrics.distance} meter
+                            Rute Terpendek: {shortestDistance} meter
                         </Typography>
                     </div>
                     <div className="time">
-                        <Typography variant="h6" style={{ color: "#fff", fontWeight: 600, fontSize: 15 }}>
-                            <AccessTime style={{ color: "#fff", width: 18, height: 18, marginLeft: 15, paddingTop: 3 }} />
-                            Waktu Pencarian: {metrics.searchTime} Detik
-                        </Typography>
-                    </div>
-                    <div className="time">
-                        <Typography variant="h6" style={{ color: "#fff", fontWeight: 600, fontSize: 15 }}>
+                        <Typography variant="h6" style={{ color: "#fff", fontWeight: 600, fontSize: 11 }}>
                             <Hub style={{ color: "#fff", width: 18, height: 18, marginLeft: 15, paddingTop: 3 }} />
-                            Total Node Dikunjungi: {metrics.visited}
+                            Jumlah Node Rute Terpendek: {shortestPathNodeCount}
                         </Typography>
                     </div>
                     <div className="time">
-                        <Typography variant="h6" style={{ color: "#fff", fontWeight: 600, fontSize: 15 }}>
+                        <Typography variant="h6" style={{ color: "#fff", fontWeight: 600, fontSize: 11 }}>
+                            <AccessTime style={{ color: "#fff", width: 18, height: 18, marginLeft: 15, paddingTop: 3 }} />
+                            Waktu Pencarian: {searchTime} Detik
+                        </Typography>
+                    </div>
+                    <div className="time">
+                        <Typography variant="h6" style={{ color: "#fff", fontWeight: 600, fontSize: 11 }}>
+                            <Hub style={{ color: "#fff", width: 18, height: 18, marginLeft: 15, paddingTop: 3 }} />
+                            Total Node Dikunjungi: {visitedNodes}
+                        </Typography>
+                    </div>
+                    <div className="time">
+                        <Typography variant="h6" style={{ color: "#fff", fontWeight: 600, fontSize: 11 }}>
+                            <Route style={{ color: "#fff", width: 18, height: 18, marginLeft: 15, paddingTop: 3 }} />
+                            Panjang Node yang Dikunjungi: {totalPathLengthKm} km
+                        </Typography>
+                    </div>
+                    <div className="time">
+                        <Typography variant="h6" style={{ color: "#fff", fontWeight: 600, fontSize: 11 }}>
                             <Memory style={{ color: "#fff", width: 18, height: 18, marginLeft: 15, paddingTop: 3 }} />
-                            Memori Digunakan: {metrics.memory} 
+                            Memori Digunakan: {memoryUsed}
                         </Typography>
                     </div>
                 </div>
             </div>
+
+
 
             {/* Tombol Menu */}
             <div className={`nav-right ${cinematic ? "cinematic" : ""}`}>

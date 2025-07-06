@@ -43,7 +43,9 @@ function Map() {
         distance: 0,
         time: 0,
         visited: 0,
-        memory: 0
+        memory: "0 B",
+        shortestPathNodeCount: 0,
+        totalPathLengthKm: "0.00"
     });
     const searchStartTime = useRef(null); // ⏱️ waktu mulai
     const searchEndTime = useRef(null);   // ⏱️ waktu selesai
@@ -206,9 +208,27 @@ function Map() {
             distance: 0,
             visited: 0,
             memory: "0 B",
+            shortestPathNodeCount: 0,
+            totalPathLengthKm: "0.00",
         }));
     }
 
+    function haversineDistance(lat1, lon1, lat2, lon2) {
+        const R = 6371e3; // meter
+        const toRad = deg => deg * Math.PI / 180;
+
+        const φ1 = toRad(lat1);
+        const φ2 = toRad(lat2);
+        const Δφ = toRad(lat2 - lat1);
+        const Δλ = toRad(lon2 - lon1);
+
+        const a = Math.sin(Δφ / 2) ** 2 +
+            Math.cos(φ1) * Math.cos(φ2) *
+            Math.sin(Δλ / 2) ** 2;
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return R * c;
+    }
 
     // Progress animation by one step
     function animateStep(newTime) {
@@ -217,7 +237,7 @@ function Map() {
         const processedNodes = allNodes.filter(node => node.processed);
         const processedCount = processedNodes.length;
 
-        // Update metrik visited
+        // Update visited
         setMetrics(prev => {
             if (prev.visited !== processedCount) {
                 return {
@@ -228,37 +248,70 @@ function Map() {
             return prev;
         });
 
-        // Update animasi jalur
         for (const updatedNode of updatedNodes) {
             updateWaypoints(updatedNode, updatedNode.referer);
         }
 
-        // Found end but waiting for animation to end
+        // Jika pencarian sudah selesai
         if (state.current.finished && !animationEnded) {
             if (!traceNode.current) traceNode.current = state.current.endNode;
             const parentNode = traceNode.current.parent;
 
-            // Hitung jarak total
+            // === Hitung Jarak Rute Terpendek & Jumlah Node ===
             let totalDistance = 0;
             let trace = state.current.endNode;
+            let pathNodeCount = 1; // hitung minimal 1 node (endNode)
+
             while (trace?.parent) {
                 const dx = trace.longitude - trace.parent.longitude;
                 const dy = trace.latitude - trace.parent.latitude;
                 const segment = Math.sqrt(dx * dx + dy * dy);
                 totalDistance += segment;
                 trace = trace.parent;
+                pathNodeCount++;
             }
 
             const distanceInMeters = Math.round(totalDistance * 111320 - 2.5);
 
-            // ✅ Hitung memori hanya sekali saat animasi selesai
-            const memoryBytes = estimateMemory(processedNodes);  // hanya node yang dikunjungi
+            // Perhitungan panjang total node yang dikunjungi
+            let totalLengthAllProcessed = 0;
+            const visitedSet = new Set(processedNodes.map(n => n.id));
+            const edgeSeen = new Set();
+
+            for (const node of processedNodes) {
+                if (!node.edges) continue;
+
+                for (const edge of node.edges) {
+                    const { node1, node2 } = edge;
+                    if (!node1 || !node2) continue;
+                    if (!visitedSet.has(node1.id) || !visitedSet.has(node2.id)) continue;
+
+                    const idPair = [node1.id, node2.id].sort().join("-");
+                    if (edgeSeen.has(idPair)) continue;
+
+                    const distMeters = haversineDistance(
+                        node1.latitude, node1.longitude,
+                        node2.latitude, node2.longitude
+                    );
+
+                    totalLengthAllProcessed += distMeters;
+                    edgeSeen.add(idPair);
+                }
+            }
+
+            const totalKm = (totalLengthAllProcessed / 1000).toFixed(2); // ✅ kilometer
+
+
+            // Hitung memori
+            const memoryBytes = estimateMemory(processedNodes);
             const formattedMemory = formatMemory(memoryBytes);
 
             setMetrics(prev => ({
                 ...prev,
                 distance: distanceInMeters.toLocaleString(),
-                memory: formattedMemory
+                memory: formattedMemory,
+                shortestPathNodeCount: pathNodeCount,
+                totalPathLengthKm: totalKm
             }));
 
             updateWaypoints(parentNode, traceNode.current, "route", Math.max(Math.log2(settings.speed), 1));
@@ -291,6 +344,8 @@ function Map() {
             setTime(prevTime => (Math.max(Math.min(prevTime + deltaTime * 2 * playbackDirection, timer.current), 0)));
         }
     }
+
+
     function estimateMemory(nodes) {
         let total = 0;
         for (const node of nodes) {
