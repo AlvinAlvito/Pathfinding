@@ -140,34 +140,34 @@ const Interface = forwardRef(({
             {/* Metrik */}
             <div className="nav-bottom">
                 <div className="perform">
-                    <div className="shortestdistance">
-                        <Typography variant="h6" style={{ color: "#fff", fontWeight: 600, fontSize: 13 }}>
-                            <Route style={{ color: "#fff", width: 18, height: 18, marginRight: 1, paddingTop: 3 }} />
-                            Rute Terpendek: {shortestDistance} meter
-                        </Typography>
-                    </div>
-                    <div className="time">
-                        <Typography variant="h6" style={{ color: "#fff", fontWeight: 600, fontSize: 13 }}>
-                            <Hub style={{ color: "#fff", width: 18, height: 18, marginLeft: 15, paddingTop: 3 }} />
-                            Jumlah Node Rute Terpendek: {shortestPathNodeCount}
-                        </Typography>
-                    </div>
                     <div className="time">
                         <Typography variant="h6" style={{ color: "#fff", fontWeight: 600, fontSize: 13 }}>
                             <AccessTime style={{ color: "#fff", width: 18, height: 18, marginLeft: 15, paddingTop: 3 }} />
-                            Waktu Pencarian: {searchTime} Detik
+                            Waktu Eksekusi: {searchTime} Detik
                         </Typography>
                     </div>
                     <div className="time">
                         <Typography variant="h6" style={{ color: "#fff", fontWeight: 600, fontSize: 13 }}>
                             <Hub style={{ color: "#fff", width: 18, height: 18, marginLeft: 15, paddingTop: 3 }} />
-                            Total Node Dikunjungi: {visitedNodes}
+                            Jumlah Node yang Dieksplorasi: {visitedNodes}
+                        </Typography>
+                    </div>
+                    <div className="shortestdistance">
+                        <Typography variant="h6" style={{ color: "#fff", fontWeight: 600, fontSize: 13 }}>
+                            <Route style={{ color: "#fff", width: 18, height: 18, marginRight: 1, paddingTop: 3 }} />
+                            Jarak Rute Terpendek: {shortestDistance} meter
                         </Typography>
                     </div>
                     <div className="time">
                         <Typography variant="h6" style={{ color: "#fff", fontWeight: 600, fontSize: 13 }}>
                             <Memory style={{ color: "#fff", width: 18, height: 18, marginLeft: 15, paddingTop: 3 }} />
                             Memori Digunakan: {memoryUsed}
+                        </Typography>
+                    </div>
+                    <div className="time">
+                        <Typography variant="h6" style={{ color: "#fff", fontWeight: 600, fontSize: 13 }}>
+                            <Hub style={{ color: "#fff", width: 18, height: 18, marginLeft: 15, paddingTop: 3 }} />
+                            Jumlah Node Rute Terpendek: {shortestPathNodeCount}
                         </Typography>
                     </div>
                 </div>
