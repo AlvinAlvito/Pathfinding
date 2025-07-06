@@ -123,9 +123,7 @@ function Map() {
     // Start new pathfinding animation
     function startPathfinding() {
         setFadeRadiusReverse(true);
-        console.log("🚀 Memulai algoritma:", settings.algorithm);
 
-        // Coba bangun daftar semua node dari grid atau graph
         if (!state.current.nodes) {
             if (state.current.grid) {
                 // Jika berbasis grid
@@ -205,21 +203,21 @@ function Map() {
         setMetrics(prev => ({
             ...prev,
             searchTime: 0,
+            distance: 0,
             visited: 0,
+            memory: "0 B",
         }));
     }
 
 
     // Progress animation by one step
     function animateStep(newTime) {
-        console.log("📍 Langkah algoritma:", state.current.algorithm.constructor.name);
-
         const updatedNodes = state.current.nextStep();
-
         const allNodes = state.current.nodes || (state.current.grid?.flat() ?? []);
+        const processedNodes = allNodes.filter(node => node.processed);
+        const processedCount = processedNodes.length;
 
-        const processedCount = allNodes.filter(node => node.processed).length;
-
+        // Update metrik visited
         setMetrics(prev => {
             if (prev.visited !== processedCount) {
                 return {
@@ -230,69 +228,52 @@ function Map() {
             return prev;
         });
 
-
+        // Update animasi jalur
         for (const updatedNode of updatedNodes) {
             updateWaypoints(updatedNode, updatedNode.referer);
         }
 
-
         // Found end but waiting for animation to end
         if (state.current.finished && !animationEnded) {
-            // Render route differently for bidirectional
-            if (settings.algorithm === "bidirectional") {
-                if (!traceNode.current) traceNode.current = updatedNodes[0];
-                const parentNode = traceNode.current.parent;
-                updateWaypoints(parentNode, traceNode.current, "route", Math.max(Math.log2(settings.speed), 1));
-                traceNode.current = parentNode ?? traceNode.current;
+            if (!traceNode.current) traceNode.current = state.current.endNode;
+            const parentNode = traceNode.current.parent;
 
-                if (!traceNode2.current) {
-                    traceNode2.current = updatedNodes[0];
-                    traceNode2.current.parent = traceNode2.current.prevParent;
-                }
-                const parentNode2 = traceNode2.current.parent;
-                updateWaypoints(parentNode2, traceNode2.current, "route", Math.max(Math.log2(settings.speed), 1));
-                traceNode2.current = parentNode2 ?? traceNode2.current;
-                setAnimationEnded(time >= timer.current && parentNode == null && parentNode2 == null);
+            // Hitung jarak total
+            let totalDistance = 0;
+            let trace = state.current.endNode;
+            while (trace?.parent) {
+                const dx = trace.longitude - trace.parent.longitude;
+                const dy = trace.latitude - trace.parent.latitude;
+                const segment = Math.sqrt(dx * dx + dy * dy);
+                totalDistance += segment;
+                trace = trace.parent;
             }
-            else {
-                if (!traceNode.current) traceNode.current = state.current.endNode;
-                const parentNode = traceNode.current.parent;
 
-                let totalDistance = 0;
-                let trace = state.current.endNode;
-                while (trace?.parent) {
-                    const dx = trace.longitude - trace.parent.longitude;
-                    const dy = trace.latitude - trace.parent.latitude;
-                    const segment = Math.sqrt(dx * dx + dy * dy);
-                    totalDistance += segment;
-                    trace = trace.parent;
-                }
+            const distanceInMeters = Math.round(totalDistance * 111320 - 2.5);
 
-                const distanceInMeters = Math.round(totalDistance * 111320 - 2.5);
+            // ✅ Hitung memori hanya sekali saat animasi selesai
+            const memoryBytes = estimateMemory(processedNodes);  // hanya node yang dikunjungi
+            const formattedMemory = formatMemory(memoryBytes);
+
+            setMetrics(prev => ({
+                ...prev,
+                distance: distanceInMeters.toLocaleString(),
+                memory: formattedMemory
+            }));
+
+            updateWaypoints(parentNode, traceNode.current, "route", Math.max(Math.log2(settings.speed), 1));
+            traceNode.current = parentNode ?? traceNode.current;
+
+            if (time >= timer.current && parentNode == null) {
+                setAnimationEnded(true);
+                searchEndTime.current = performance.now();
+                const duration = (searchEndTime.current - searchStartTime.current) / 1000;
 
                 setMetrics(prev => ({
                     ...prev,
-                    distance: distanceInMeters.toLocaleString()
+                    searchTime: duration.toFixed(2)
                 }));
-
-                updateWaypoints(parentNode, traceNode.current, "route", Math.max(Math.log2(settings.speed), 1));
-                traceNode.current = parentNode ?? traceNode.current;
-
-                if (time >= timer.current && parentNode == null) {
-                    setAnimationEnded(true);
-
-                    // Catat waktu selesai dan hitung durasi
-                    searchEndTime.current = performance.now();
-                    const duration = (searchEndTime.current - searchStartTime.current) / 1000; // dalam detik
-
-                    setMetrics(prev => ({
-                        ...prev,
-                        searchTime: duration.toFixed(2) // dua angka di belakang koma
-                    }));
-                }
-
             }
-
         }
 
         // Animation progress
@@ -310,6 +291,29 @@ function Map() {
             setTime(prevTime => (Math.max(Math.min(prevTime + deltaTime * 2 * playbackDirection, timer.current), 0)));
         }
     }
+    function estimateMemory(nodes) {
+        let total = 0;
+        for (const node of nodes) {
+            total += 64; // base node
+            if (node.neighbors) total += node.neighbors.length * 16;
+            if (node.edges) total += node.edges.length * 32;
+            if (node.referer) total += 32;
+            if (node.parent) total += 32;
+            if (node.distanceFromStart !== undefined) total += 8;
+            if (node.f !== undefined) total += 8;
+            if (node.g !== undefined) total += 8;
+            if (node.h !== undefined) total += 8;
+        }
+        return total;
+    }
+
+    function formatMemory(bytes) {
+        if (bytes >= 1_000_000) return (bytes / 1_000_000).toFixed(2) + " MB";
+        if (bytes >= 1_000) return (bytes / 1_000).toFixed(2) + " KB";
+        return bytes + " B";
+    }
+
+
 
     // Animation callback
     function animate(newTime) {

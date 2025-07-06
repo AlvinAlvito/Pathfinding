@@ -155,7 +155,7 @@ const Interface = forwardRef(({
                     <div className="time">
                         <Typography variant="h6" style={{ color: "#fff", fontWeight: 600, fontSize: 15 }}>
                             <Memory style={{ color: "#fff", width: 18, height: 18, marginLeft: 15, paddingTop: 3 }} />
-                            Memori Digunakan: {metrics.memory} b
+                            Memori Digunakan: {metrics.memory} 
                         </Typography>
                     </div>
                 </div>
